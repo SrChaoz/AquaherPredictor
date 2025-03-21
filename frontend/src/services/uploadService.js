@@ -4,7 +4,7 @@ export const uploadFile = async (archivo, setIsLoading) => {
     const formData = new FormData();
     formData.append('file', archivo);
 
-    console.log('📤 Enviando archivo:', archivo);
+    console.log(' Enviando archivo:', archivo);
 
     setIsLoading(true);
 
@@ -13,7 +13,7 @@ export const uploadFile = async (archivo, setIsLoading) => {
         alert(response.data.message);
     } catch (error) {
         alert("Error al subir el archivo.");
-        console.error("❌ Error al subir el archivo:", error);
+        console.error(" Error al subir el archivo:", error);
     } finally {
         setIsLoading(false);
     }
