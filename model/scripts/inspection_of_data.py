@@ -42,7 +42,7 @@ for col in numeric_cols:
     print(f"{col} → Min: {min_value}, Max: {max_value}")
 
 # Mostrar las primeras 5 filas para visualizar los datos
-print("\n👀 Primeras 5 filas del DataFrame:")
+print("\nPrimeras 5 filas del DataFrame:")
 print(df.head())
 
 # Cerrar conexión
