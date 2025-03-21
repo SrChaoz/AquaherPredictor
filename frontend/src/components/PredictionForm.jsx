@@ -3,6 +3,7 @@
 import React from "react"
 import { useState } from "react"
 import { getPrediction } from "../services/predictionService"
+import { calcularICA } from "../utils/icaCalculator"
 
 const PredictionForm = () => {
   const [fecha, setFecha] = useState("")
@@ -16,12 +17,23 @@ const PredictionForm = () => {
     dureza: "mg/L",
     conductividad: "µS/cm",
     tds: "mg/L",
+    ica: "ICA"  // No tiene unidad
   }
 
   const formatearNombreParametro = (parametro) => {
     if (parametro === "ph") return "pH"
     if (parametro === "tds") return "TDS"
+    if (parametro === "ica") return "ICA"
     return parametro.charAt(0).toUpperCase() + parametro.slice(1)
+  }
+
+  // Función para obtener el color según el valor del ICA
+  const getColorICA = (valor) => {
+    if (valor >= 85) return "bg-green-500 text-white"  // No contaminado
+    if (valor >= 70) return "bg-green-300 text-black"  // Aceptable
+    if (valor >= 50) return "bg-yellow-300 text-black" // Poco contaminado
+    if (valor >= 30) return "bg-orange-400 text-black" // Contaminado
+    return "bg-red-500 text-white"                     // Altamente contaminado
   }
 
   const handleSubmit = async (e) => {
@@ -34,7 +46,10 @@ const PredictionForm = () => {
     setIsLoading(true)
     try {
       const data = await getPrediction(fecha)
-      setResultado(data.prediction)
+
+      // Calcular el ICA utilizando la función definida
+      const ica = calcularICA(data.prediction)
+      setResultado({ ...data.prediction, ica })  // Agrega el valor de ICA a los resultados
     } catch (err) {
       alert("Error al obtener la predicción.")
       console.error("Error:", err)
@@ -99,7 +114,12 @@ const PredictionForm = () => {
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                             {formatearNombreParametro(parametro)}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{valor}</td>
+                          <td
+                            className={`px-6 py-4 whitespace-nowrap text-sm ${parametro === "ica" ? getColorICA(valor) : "text-gray-500"
+                              }`}
+                          >
+                            {valor}
+                          </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {unidades[parametro] || "-"}
                           </td>
@@ -107,6 +127,28 @@ const PredictionForm = () => {
                       ))}
                     </tbody>
                   </table>
+                </div>
+
+                {/* 🔹 Leyenda del ICA */}
+                <div className="mt-6">
+                  <h3 className="text-lg font-medium mb-3">📋 Parametros del ICA (Indice de Calidad del Agua)</h3>
+                  <div className="flex flex-wrap gap-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-green-500 rounded-full"></div> No contaminado (85-100)
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-green-300 rounded-full"></div> Aceptable (70-84)
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-yellow-300 rounded-full"></div> Poco contaminado (50-69)
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-orange-400 rounded-full"></div> Contaminado (30-49)
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-red-500 rounded-full"></div> Altamente contaminado (0-29)
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
@@ -118,4 +160,3 @@ const PredictionForm = () => {
 }
 
 export default PredictionForm
-
