@@ -9,10 +9,10 @@ Este proyecto está diseñado para predecir parámetros clave de calidad del agu
 - **Modelo de Machine Learning**: Random Forest en Python
 
 ## Funcionalidades Clave
-✅ Predicción de parámetros del agua a partir de una fecha
-✅ Visualización moderna de los datos almacenados
-✅ Carga de nuevos datos a la base de datos mediante un formulario mejorado
-✅ Diseño atractivo basado en la paleta de colores de la empresa
+- ✅ Predicción de parámetros del agua a partir de una fecha
+- ✅ Visualización moderna de los datos almacenados
+- ✅ Carga de nuevos datos a la base de datos mediante un formulario mejorado
+- ✅ Diseño atractivo basado en la paleta de colores de la empresa
 
 ## Estructura del Proyecto
 ```
