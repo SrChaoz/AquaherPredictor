@@ -48,7 +48,7 @@ df['Dia'] = df['Fecha'].dt.day
 
 df['Dias_Transcurridos'] = (df['Fecha'] - df['Fecha'].min()).dt.days
 
-# ➕ Nueva característica temporal para normalización
+# característica temporal para normalización
 df['Fecha_Normalizada'] = (df['Dias_Transcurridos'] - df['Dias_Transcurridos'].min()) / (df['Dias_Transcurridos'].max() - df['Dias_Transcurridos'].min())
 
 df.drop(columns=['fecha'], inplace=True)
@@ -58,7 +58,7 @@ scaler = StandardScaler()
 X_features = ['Dias_Transcurridos', 'Mes', 'Dia', 'Dia_semana', 'Fecha_Normalizada', 'Año']
 X = pd.DataFrame(scaler.fit_transform(df[X_features]), columns=X_features)
 
-# 🔥 Guardar el Scaler y los nombres de las columnas
+# Guardar el Scaler y los nombres de las columnas
 scaler_data = {
     'scaler': scaler,
     'columns': X_features
