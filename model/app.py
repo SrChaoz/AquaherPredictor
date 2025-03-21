@@ -26,17 +26,35 @@ print(f"✅ Modelo cargado: {'RandomForest' if modelo_rf else 'XGBoost'}")
 
 app = Flask(__name__)
 
+# Variables para calcular `Fecha_Normalizada`
+FECHA_MINIMA = datetime(2023, 1, 1)  # Cambiar según el primer registro del dataset
+FECHA_MAXIMA = datetime.now()         # Cambiar si se tiene una fecha máxima en el entrenamiento
+
+#  Cargar el escalador y sus columnas
+with open('./model/scaler.pkl', 'rb') as file:
+    scaler_data = pickle.load(file)
+scaler = scaler_data['scaler']
+scaler_columns = scaler_data['columns']
+
 # Función para convertir una fecha en las características necesarias
 def convertir_fecha(fecha_str):
     fecha = datetime.strptime(fecha_str, "%Y-%m-%d")
     hoy = datetime.now()
 
-    return pd.DataFrame({
-        'Dias_Transcurridos': [(fecha - hoy).days],
+    # Calcular `Dias_Transcurridos` desde la fecha actual
+    fecha_df = pd.DataFrame({
+        'Dias_Transcurridos': [abs((fecha - hoy).days)],
         'Mes': [fecha.month],
         'Dia': [fecha.day],
-        'Dia_semana': [fecha.weekday()]  # 0 = Lunes, 6 = Domingo
+        'Dia_semana': [fecha.weekday()],
+        'Fecha_Normalizada': [(fecha - FECHA_MINIMA).days / (FECHA_MAXIMA - FECHA_MINIMA).days],
+        'Año': [fecha.year]  
     })
+
+    # Reconstruir el DataFrame asegurando que tenga los nombres correctos
+    fecha_df = fecha_df.reindex(columns=scaler_columns, fill_value=0)  # Garantiza columnas correctas
+
+    return fecha_df
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -49,12 +67,16 @@ def predict():
     # Convertir la fecha en las características necesarias
     try:
         fecha_df = convertir_fecha(data['fecha'])
+        fecha_df_scaled = pd.DataFrame(scaler.transform(fecha_df), columns=scaler_columns)
     except ValueError:
         return jsonify({'error': 'Formato de fecha inválido (usar YYYY-MM-DD)'}), 400
+    except Exception as e:
+        print(f"❌ Error en el escalado: {e}")
+        return jsonify({'error': 'Error en el procesamiento de la fecha'}), 500
 
     # Realizar la predicción
     try:
-        prediction = modelo_actual.predict(fecha_df)
+        prediction = modelo_actual.predict(fecha_df_scaled)
 
         # Convertir las predicciones a tipo float estándar
         prediction = np.array(prediction).astype(float).tolist()
