@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.ipynb_checkpoints
+*.log
+
+# Virtual Environment
+venv/
+env/
+*.env
+*.venv
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.checkpoint
+
+# Editor Configurations
+.idea/
+.vscode/
+*.swp
+
+

@@ -1,11 +1,28 @@
 from flask import Flask, request, jsonify
 import pickle
 import pandas as pd
+import numpy as np
 from datetime import datetime
 
 # Cargar el modelo previamente entrenado
-with open('./model/best_rf_model.pkl', 'rb') as file:
-    best_rf_regressor = pickle.load(file)
+try:
+    with open('./model/best_rf_model.pkl', 'rb') as file:
+        modelo_rf = pickle.load(file)
+except FileNotFoundError:
+    modelo_rf = None
+
+try:
+    with open('./model/best_xgb_model.pkl', 'rb') as file:
+        modelo_xgb = pickle.load(file)
+except FileNotFoundError:
+    modelo_xgb = None
+
+if not modelo_rf and not modelo_xgb:
+    raise ValueError("❌ No se encontró ningún modelo entrenado (RandomForest ni XGBoost).")
+
+# Determinar qué modelo está disponible
+modelo_actual = modelo_rf if modelo_rf else modelo_xgb
+print(f"✅ Modelo cargado: {'RandomForest' if modelo_rf else 'XGBoost'}")
 
 app = Flask(__name__)
 
@@ -37,18 +54,23 @@ def predict():
 
     # Realizar la predicción
     try:
-        prediction = best_rf_regressor.predict(fecha_df)
+        prediction = modelo_actual.predict(fecha_df)
+
+        # Convertir las predicciones a tipo float estándar
+        prediction = np.array(prediction).astype(float).tolist()
+
         resultados = {
-            'ph': prediction[0][0],
-            'turbidez': prediction[0][1],
-            'conductividad': prediction[0][2],
-            'tds': prediction[0][3],
-            'dureza': prediction[0][4],
-            'color': prediction[0][5]
+            'ph': round(prediction[0][0], 2),
+            'turbidez': round(prediction[0][1], 2),
+            'conductividad': round(prediction[0][2], 2),
+            'tds': round(prediction[0][3], 2),
+            'dureza': round(prediction[0][4], 2),
+            'color': round(prediction[0][5], 2)
         }
         return jsonify(resultados)
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        print(f"❌ Error en la predicción: {e}")
+        return jsonify({'error': 'Error en la predicción'}), 500
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
