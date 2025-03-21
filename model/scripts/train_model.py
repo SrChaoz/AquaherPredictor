@@ -53,14 +53,15 @@ df.drop(columns=['fecha'], inplace=True)
 # Escalar solo las variables de entrada
 scaler = StandardScaler()
 X_features = ['Dias_Transcurridos', 'Mes', 'Dia', 'Dia_semana']
-X = df[X_features]
-X_scaled = scaler.fit_transform(X)
+
+# ✅ Escalar manteniendo los nombres de columnas
+X = pd.DataFrame(scaler.fit_transform(df[X_features]), columns=X_features)
 
 # El target se deja sin escalar
 y = df[['ph', 'turbidez', 'conductividad', 'tds', 'dureza', 'color']]
 
 # Dividir en conjuntos de entrenamiento y prueba
-X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # ---- ENTRENAMIENTO DE MODELOS ----
 
@@ -92,10 +93,10 @@ def evaluar_modelo(nombre, y_real, y_pred):
     r2 = r2_score(y_real, y_pred)
     mae = mean_absolute_error(y_real, y_pred)
     mape = mean_absolute_percentage_error(y_real, y_pred)
-    print(f" {nombre} - MSE: {mse:.2f}")
-    print(f" {nombre} - R² Score: {r2:.2f}")
-    print(f" {nombre} - MAE: {mae:.2f}")
-    print(f" {nombre} - MAPE: {mape:.2%}")
+    print(f"✅ {nombre} - MSE: {mse:.2f}")
+    print(f"✅ {nombre} - R² Score: {r2:.2f}")
+    print(f"✅ {nombre} - MAE: {mae:.2f}")
+    print(f"✅ {nombre} - MAPE: {mape:.2%}")
 
 evaluar_modelo("RandomForest", y_test, y_pred_rf)
 evaluar_modelo("XGBoost", y_test, y_pred_xgb)
@@ -107,7 +108,7 @@ with open('best_rf_model.pkl', 'wb') as file:
 with open('best_xgb_model.pkl', 'wb') as file:
     pickle.dump(xgb_regressor, file)
 
-print(" Modelos guardados exitosamente")
+print("✅ Modelos guardados exitosamente")
 
 # Cerrar la conexión a la base de datos
 conn.close()
