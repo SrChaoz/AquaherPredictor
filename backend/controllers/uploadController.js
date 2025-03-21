@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/dbConfig');
-const upload = require('../middlewares/multerConfig'); // ✅ Usar la configuración correcta
+const upload = require('../middlewares/multerConfig');
 const csv = require('csv-parser');
 const fs = require('fs');
 const moment = require('moment');

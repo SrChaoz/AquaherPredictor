@@ -8,7 +8,7 @@ exports.getPrediction = async (req, res) => {
     }
 
     try {
-        const predictionResult = await predictionService.predict({ fecha });  // 🔹 Enviar solo la fecha
+        const predictionResult = await predictionService.predict({ fecha });  // Enviar solo la fecha
         res.json({ prediction: predictionResult });
     } catch (error) {
         console.error('Error en el controlador:', error);

@@ -1,3 +1,5 @@
+
+//No esta en uso, el app.py ya se encarga de la conversion de fechas
 exports.convertirFecha = (fecha) => {
     const date = new Date(fecha);
     const today = new Date();
