@@ -1,4 +1,7 @@
+flask
 pandas
-scikit-learn
+numpy
 psycopg2
-pip install python-dotenv
+scikit-learn
+xgboost
+python-dotenv
