@@ -19,8 +19,7 @@ Este proyecto está diseñado para predecir parámetros clave de calidad del agu
 /
 ├── backend/
 ├── frontend/
-├── modelo/
-├── data/
+├── model/
 ├── README.md
 ```
 ## Instrucciones de Instalación
@@ -28,6 +27,6 @@ Para consultar las instrucciones de instalación específicas de cada componente
 
 - [Instrucciones del Backend](./backend/README.md)  
 - [Instrucciones del Frontend](./frontend/README.md)  
-- [Instrucciones del Modelo de Machine Learning](./modelo/README.md)  
+- [Instrucciones del Modelo de Machine Learning](./model/README.md)  
 
 ---
