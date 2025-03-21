@@ -1,7 +1,7 @@
 import React from "react"
 import { Link } from "react-router-dom"
 import { Droplet } from "lucide-react";
-import LogoAquaher from "../assets/icons/LogoAquaher.png"; // Ajusta la ruta según tu estructura
+import LogoAquaher from "../assets/icons/IconAquaher.png"; // Importar el logo de AquaHer
 
 import PropTypes from "prop-types";
 
@@ -16,7 +16,7 @@ const Navbar = ({ activeTab }) => {
             {/*<div className="h-8 w-8 rounded-full bg-gradient-to-r from-[#4c8cb4] to-[#74ab3c]"></div>*/}
             {/*<h1 className="text-xl font-bold text-gray-800">AquaHerPredict</h1>*/}
             <h1 className="text-xl font-bold">
-              <span className="text-[#4c8cb4]">AquaHer</span>
+              <span className="text-[#0454b4]">AquaHer</span>
               <span className="text-[#74ab3c]">Predict</span>
             </h1>
           </div>
