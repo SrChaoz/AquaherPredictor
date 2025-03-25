@@ -3,8 +3,7 @@
 ## Descripción
 El backend está desarrollado en Node.js con Express.js y se encarga de:
 - Recibir solicitudes del frontend.
-- Consultar y actualizar la base de datos MySQL.
-- Comunicar el turbidímetro Hach TL2300 para recibir datos en tiempo real.
+- Consultar y actualizar la base de datos SQL.
 
 ## Instalación
 ```bash
