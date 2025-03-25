@@ -5,3 +5,6 @@ psycopg2
 scikit-learn
 xgboost
 python-dotenv
+python3.13-devel
+shap
+seaborn
