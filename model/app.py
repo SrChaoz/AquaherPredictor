@@ -1,3 +1,4 @@
+
 from flask import Flask, request, jsonify
 import pickle
 import pandas as pd
@@ -6,23 +7,23 @@ from datetime import datetime
 
 # Cargar el modelo previamente entrenado
 try:
-    with open('./model/best_rf_model.pkl', 'rb') as file:
+    with open('./model/best_rf_model.pkl', 'rb') as file: #RandomForest
         modelo_rf = pickle.load(file)
 except FileNotFoundError:
     modelo_rf = None
 
 try:
-    with open('./model/best_xgb_model.pkl', 'rb') as file:
+    with open('./model/best_xgb_model.pkl', 'rb') as file: #XGBoost
         modelo_xgb = pickle.load(file)
 except FileNotFoundError:
     modelo_xgb = None
 
 if not modelo_rf and not modelo_xgb:
-    raise ValueError("❌ No se encontró ningún modelo entrenado (RandomForest ni XGBoost).")
+    raise ValueError(" No se encontró ningún modelo entrenado (RandomForest ni XGBoost).")
 
 # Determinar qué modelo está disponible
 modelo_actual = modelo_rf if modelo_rf else modelo_xgb
-print(f"✅ Modelo cargado: {'RandomForest' if modelo_rf else 'XGBoost'}")
+print(f" Modelo cargado: {'RandomForest' if modelo_rf else 'XGBoost'}")
 
 app = Flask(__name__)
 
@@ -36,7 +37,7 @@ with open('./model/scaler.pkl', 'rb') as file:
 scaler = scaler_data['scaler']
 scaler_columns = scaler_data['columns']
 
-# Función para convertir una fecha en las características necesarias
+# Función para convertir una fecha en los parámetros necesarios
 def convertir_fecha(fecha_str):
     fecha = datetime.strptime(fecha_str, "%Y-%m-%d")
     hoy = datetime.now()
@@ -52,7 +53,7 @@ def convertir_fecha(fecha_str):
     })
 
     # Reconstruir el DataFrame asegurando que tenga los nombres correctos
-    fecha_df = fecha_df.reindex(columns=scaler_columns, fill_value=0)  # Garantiza columnas correctas
+    fecha_df = fecha_df.reindex(columns=scaler_columns, fill_value=0)  # Garantiza columnas correctas y en orden
 
     return fecha_df
 
@@ -71,7 +72,7 @@ def predict():
     except ValueError:
         return jsonify({'error': 'Formato de fecha inválido (usar YYYY-MM-DD)'}), 400
     except Exception as e:
-        print(f"❌ Error en el escalado: {e}")
+        print(f" Error en el escalado: {e}")
         return jsonify({'error': 'Error en el procesamiento de la fecha'}), 500
 
     # Realizar la predicción
@@ -91,7 +92,7 @@ def predict():
         }
         return jsonify(resultados)
     except Exception as e:
-        print(f"❌ Error en la predicción: {e}")
+        print(f" Error en la predicción: {e}")
         return jsonify({'error': 'Error en la predicción'}), 500
 
 if __name__ == '__main__':

@@ -81,7 +81,7 @@ const DataView = () => {
                 <div className="flex justify-between items-center mb-4">
                   <div className="flex items-center space-x-2">
                     <Database className="h-5 w-5 text-[#7eb53c]" />
-                    {/*<span className="font-medium">Registros encontrados: {datos.length}</span>*/}
+                   {/* <span className="font-medium">Registros encontrados: {datos.length-1}</span>*/}
                     <span className="font-medium">Registros encontrados:</span>
                   </div>
                 </div>

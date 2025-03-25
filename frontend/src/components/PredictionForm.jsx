@@ -17,7 +17,7 @@ const PredictionForm = () => {
     dureza: "mg/L",
     conductividad: "µS/cm",
     tds: "mg/L",
-    ica: "ICA"  // No tiene unidad
+    ica: "ICA"  // Índice de Calidad del Agua
   }
 
   const formatearNombreParametro = (parametro) => {

@@ -25,7 +25,7 @@ const fileFilter = (req, file, cb) => {
     cb(null, true); // Aceptar archivo
 };
 
-// Configuración de Multer con límites de tamaño y filtro de archivos
+// límites de tamaño 
 const upload = multer({
     storage,
     fileFilter,

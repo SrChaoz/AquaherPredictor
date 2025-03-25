@@ -104,11 +104,11 @@ def evaluar_modelo(nombre, y_real, y_pred):
     mape = mean_absolute_percentage_error(y_real, y_pred)
     medae = median_absolute_error(y_real, y_pred)
     
-    print(f"✅ {nombre} - MSE: {mse:.2f}")
-    print(f"✅ {nombre} - R² Score: {r2:.2f}")
-    print(f"✅ {nombre} - MAE: {mae:.2f}")
-    print(f"✅ {nombre} - MAPE: {mape:.2%}")
-    print(f"✅ {nombre} - MedAE: {medae:.2f}")
+    print(f" {nombre} - MSE: {mse:.2f}")
+    print(f" {nombre} - R² Score: {r2:.2f}")
+    print(f" {nombre} - MAE: {mae:.2f}")
+    print(f" {nombre} - MAPE: {mape:.2%}")
+    print(f" {nombre} - MedAE: {medae:.2f}")
 
 evaluar_modelo("RandomForest", y_test, y_pred_rf)
 evaluar_modelo("XGBoost", y_test, y_pred_xgb)
@@ -120,7 +120,7 @@ with open('best_rf_model.pkl', 'wb') as file:
 with open('best_xgb_model.pkl', 'wb') as file:
     pickle.dump(xgb_regressor, file)
 
-print("✅ Modelos guardados exitosamente")
+print(" Modelos guardados exitosamente")
 
 # Cerrar la conexión a la base de datos
 conn.close()

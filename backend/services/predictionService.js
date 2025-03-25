@@ -11,14 +11,14 @@ exports.predict = async (data) => {
             throw new Error('Respuesta inesperada del servidor.');
         }
 
-        // Redondear los valores predichos
+        // Redondear los valores de la predicción a 2 decimales
         const resultadosRedondeados = Object.fromEntries(
             Object.entries(prediction).map(([key, value]) => [key, parseFloat(value.toFixed(2))])
         );
 
         return resultadosRedondeados;
     } catch (error) {
-        console.error('❌ Error en predictionService:', error.response?.data || error.message);
+        console.error(' Error en predictionService:', error.response?.data || error.message);
         throw new Error('Error en la predicción');
     }
 };

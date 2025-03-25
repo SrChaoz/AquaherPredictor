@@ -3,6 +3,7 @@ import psycopg2
 from dotenv import load_dotenv
 import os
 from datetime import datetime
+#https://open-meteo.com/
 
 # Cargar variables de entorno
 load_dotenv()
@@ -70,7 +71,7 @@ def obtener_datos_climaticos(fecha, lat, lon):
 print(" Obteniendo registros de la base de datos...")
 cursor.execute("SELECT id, fecha FROM calidad_agua")
 registros = cursor.fetchall()
-print(f"🔎 Se encontraron {len(registros)} registros en la base de datos.")
+print(f"Se encontraron {len(registros)} registros en la base de datos.")
 
 procesados = 0
 errores = 0
