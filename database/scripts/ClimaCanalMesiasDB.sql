@@ -1,4 +1,4 @@
-
+--1. Crear tabla de calidad de agua
 CREATE TABLE calidad_agua (
     id SERIAL PRIMARY KEY,  
     fecha DATE,
@@ -12,6 +12,7 @@ CREATE TABLE calidad_agua (
 );
 
 
+--2. Agregar columnas de clima
 ALTER TABLE calidad_agua
 ADD COLUMN precipitacion DOUBLE PRECISION,
 ADD COLUMN temperatura DOUBLE PRECISION,
@@ -20,7 +21,7 @@ ADD COLUMN humedad DOUBLE PRECISION,
 ADD COLUMN presion DOUBLE PRECISION;
 
 
-
+--3. Crear función para insertar datos
 CREATE OR REPLACE FUNCTION insertar_datos(
     p_fecha DATE,
     p_ph DOUBLE PRECISION,
@@ -49,7 +50,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-
+--4. Crear función para obtener datos por fecha 
 CREATE OR REPLACE FUNCTION obtener_datos_por_fecha(fecha_consulta DATE)
 RETURNS TABLE (
     id INTEGER,

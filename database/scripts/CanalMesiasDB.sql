@@ -1,3 +1,4 @@
+--1. Crear tabla de calidad de agua
 CREATE TABLE calidad_agua (
     id SERIAL PRIMARY KEY,  
     fecha DATE,
@@ -13,6 +14,7 @@ CREATE TABLE calidad_agua (
 
 SELECT * FROM calidad_agua;
 
+--2. Crear función para obtener datos por fecha
 CREATE OR REPLACE FUNCTION obtener_datos_por_fecha(fecha_consulta DATE)
 RETURNS TABLE (
     id INTEGER,
@@ -34,7 +36,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-
+--3.Crear función para insertar datos
 CREATE OR REPLACE FUNCTION insertar_datos(
     p_fecha DATE,
     p_ph DOUBLE PRECISION,

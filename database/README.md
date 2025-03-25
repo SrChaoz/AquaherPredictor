@@ -30,16 +30,16 @@ Sigue estos pasos para restaurar la base de datos usando pgAdmin:
    - En el campo **Filename**, haz clic en el icono de carpeta y selecciona el archivo correspondiente:
      - Para la base de datos principal: `RespaldoCanalMesiasDB.backup`
      - Para la base de datos enriquecida con datos climáticos: `RespaldoCanalMesiasDBClima.backup`
-   - En el campo **Format**, selecciona `Custom` o `Tar` (según el formato del backup).
+   - En el campo **Format**, selecciona `Custom`.
    - En la sección **Options**, selecciona:
-     - **Clean before restore** (para eliminar objetos existentes y restaurar desde cero).
-     - **No Owner** (en caso de que el backup provenga de otro servidor con un propietario diferente).
+     - **Clean before restore** para eliminar objetos existentes si los hay y restaurar desde cero.
+
 4. Haz clic en **Restore** y espera a que finalice el proceso.
 
 ### **Paso 4: Verificar la Base de Datos**
 - Una vez restaurada, puedes expandir la base de datos en el panel izquierdo para verificar que todas las tablas, funciones y datos estén presentes.
 
-### **Paso 5: Importar Scripts Manualmente (si es necesario)**
+### **Paso 5: Importar Scripts Manualmente solo si es necesario**
 1. Abre la base de datos en pgAdmin.
 2. Haz clic en el botón de **Query Tool**.
 3. Abre los archivos SQL desde la carpeta `scripts/` y ejecútelos según el orden especificado en los comentarios dentro de los scripts.
