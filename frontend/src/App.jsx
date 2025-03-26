@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar"
 import PredictionForm from "./components/PredictionForm"
 import DataUploadForm from "./components/DataUploadForm"
 import DataView from "./components/DataView"
+import DataViewAll from "./components/DataViewPredic"
 
 // Componente wrapper para detectar la ruta actual
 const AppContent = () => {
@@ -14,6 +15,7 @@ const AppContent = () => {
     if (path === "/") return "prediccion"
     if (path === "/upload") return "cargar"
     if (path === "/view-data") return "ver"
+    if (path === "/all-data") return "historial"
     return ""
   }
 
@@ -24,6 +26,7 @@ const AppContent = () => {
         <Route path="/" element={<PredictionForm />} />
         <Route path="/upload" element={<DataUploadForm />} />
         <Route path="/view-data" element={<DataView />} />
+        <Route path="/all-data" element={<DataViewAll />} />
       </Routes>
     </div>
   )
