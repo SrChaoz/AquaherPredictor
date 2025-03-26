@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const predictionRoutes = require('./routes/predictionRoutes');
 const dataController = require('./controllers/dataController');
 const uploadRoutes = require('./routes/uploadRoutes');
+const datosPredic = require('./routes/datosPredicRoutes');
 
 const app = express();
 const PORT = 3000;
@@ -19,6 +20,7 @@ app.use(bodyParser.json());
 app.use('/api/predict', predictionRoutes);
 app.use(dataController);
 app.use(uploadRoutes);
+app.use('/api', datosPredic);
 
 //Iniciar servidor
 app.listen(PORT, () => {
