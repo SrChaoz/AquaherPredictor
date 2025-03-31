@@ -1,11 +1,14 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { fetchAllData, fetchDataByDate } from "../services/dataService"
-import { Database, Search, Calendar, ChevronLeft, ChevronRight, RefreshCw } from "lucide-react"
+import { fetchAllData, fetchDataByDate, fetchDataByRange } from "../services/dataService"
+import { Database, Search, Calendar, ChevronLeft, ChevronRight, RefreshCw, CalendarRange } from "lucide-react"
 
 const DataView = () => {
   const [fecha, setFecha] = useState("")
+  const [fechaDesde, setFechaDesde] = useState("")
+  const [fechaHasta, setFechaHasta] = useState("")
+  const [searchMode, setSearchMode] = useState("single") // "single" o "range"
   const [allData, setAllData] = useState([])
   const [filteredData, setFilteredData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -50,10 +53,29 @@ const DataView = () => {
     setCurrentPage(pageNumber)
   }
 
-  // Buscar por fecha
+  // Cambiar modo de búsqueda
+  const toggleSearchMode = (mode) => {
+    setSearchMode(mode)
+    // Limpiar campos al cambiar de modo
+    setFecha("")
+    setFechaDesde("")
+    setFechaHasta("")
+  }
+
+  // Buscar por fecha o rango
   const handleSearch = async () => {
-    if (!fecha) {
+    if (searchMode === "single" && !fecha) {
       alert("Por favor ingresa una fecha válida.")
+      return
+    }
+
+    if (searchMode === "range" && (!fechaDesde || !fechaHasta)) {
+      alert("Por favor ingresa un rango de fechas válido.")
+      return
+    }
+
+    if (searchMode === "range" && fechaDesde > fechaHasta) {
+      alert("La fecha inicial no puede ser posterior a la fecha final.")
       return
     }
 
@@ -62,12 +84,22 @@ const DataView = () => {
     setCurrentPage(1) // Resetear a la primera página al realizar una nueva búsqueda
 
     try {
-      const data = await fetchDataByDate(fecha)
-      if (data.length === 0) {
-        alert("No se encontraron datos para la fecha seleccionada.")
-        // No cambiamos los datos filtrados para mantener la vista actual
+      let data = []
+
+      if (searchMode === "single") {
+        data = await fetchDataByDate(fecha)
+        if (data.length === 0) {
+          alert("No se encontraron datos para la fecha seleccionada.")
+        } else {
+          setFilteredData(data)
+        }
       } else {
-        setFilteredData(data)
+        data = await fetchDataByRange(fechaDesde, fechaHasta)
+        if (data.length === 0) {
+          alert("No se encontraron datos para el rango de fechas seleccionado.")
+        } else {
+          setFilteredData(data)
+        }
       }
     } catch (err) {
       alert("Error al obtener los datos.")
@@ -80,9 +112,23 @@ const DataView = () => {
   // Limpiar búsqueda y mostrar todos los datos
   const handleClearSearch = () => {
     setFecha("")
+    setFechaDesde("")
+    setFechaHasta("")
     setFilteredData(allData)
     setSearchPerformed(false)
     setCurrentPage(1)
+  }
+
+  // Obtener mensaje de resultados
+  const getResultsMessage = () => {
+    if (isLoading) return "Cargando datos..."
+    if (!searchPerformed) return `Total de registros: ${filteredData.length}`
+
+    if (searchMode === "single") {
+      return `Resultados para ${fecha}: ${filteredData.length}`
+    } else {
+      return `Resultados desde ${fechaDesde} hasta ${fechaHasta}: ${filteredData.length}`
+    }
   }
 
   return (
@@ -90,26 +136,98 @@ const DataView = () => {
       <div className="container mx-auto px-4">
         <div className="w-full max-w-6xl mx-auto">
           <div className="bg-white rounded-lg shadow-lg p-6 md:p-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-8 text-center">📋 Visualizar Datos</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">📋 Visualizar Datos</h2>
 
-            <div className="flex flex-col md:flex-row md:items-end gap-4 mb-8">
-              <div className="flex-1">
-                <label htmlFor="date-input" className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                  <Calendar className="h-4 w-4 text-[#7eb53c]" />
-                  Filtrar por Fecha
-                </label>
-                <input
-                  id="date-input"
-                  type="date"
-                  value={fecha}
-                  onChange={(e) => setFecha(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#7eb53c] focus:border-transparent"
-                />
+            {/* Selector de modo de búsqueda */}
+            <div className="flex justify-center mb-6">
+              <div className="inline-flex rounded-md shadow-sm" role="group">
+                <button
+                  type="button"
+                  onClick={() => toggleSearchMode("single")}
+                  className={`px-4 py-2 text-sm font-medium rounded-l-lg border ${
+                    searchMode === "single"
+                      ? "bg-[#7eb53c] text-white border-[#7eb53c]"
+                      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+                  }`}
+                >
+                  <Calendar className="h-4 w-4 inline-block mr-2" />
+                  Fecha Específica
+                </button>
+                <button
+                  type="button"
+                  onClick={() => toggleSearchMode("range")}
+                  className={`px-4 py-2 text-sm font-medium rounded-r-lg border ${
+                    searchMode === "range"
+                      ? "bg-[#4c8cb4] text-white border-[#4c8cb4]"
+                      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+                  }`}
+                >
+                  <CalendarRange className="h-4 w-4 inline-block mr-2" />
+                  Rango de Fechas
+                </button>
               </div>
+            </div>
+
+            {/* Formulario de búsqueda */}
+            <div className="flex flex-col md:flex-row md:items-end gap-4 mb-8">
+              {searchMode === "single" ? (
+                <div className="flex-1">
+                  <label
+                    htmlFor="date-input"
+                    className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2"
+                  >
+                    <Calendar className="h-4 w-4 text-[#7eb53c]" />
+                    Filtrar por Fecha
+                  </label>
+                  <input
+                    id="date-input"
+                    type="date"
+                    value={fecha}
+                    onChange={(e) => setFecha(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#7eb53c] focus:border-transparent"
+                  />
+                </div>
+              ) : (
+                <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label
+                      htmlFor="date-from"
+                      className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2"
+                    >
+                      <Calendar className="h-4 w-4 text-[#4c8cb4]" />
+                      Desde
+                    </label>
+                    <input
+                      id="date-from"
+                      type="date"
+                      value={fechaDesde}
+                      onChange={(e) => setFechaDesde(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4c8cb4] focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="date-to" className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                      <Calendar className="h-4 w-4 text-[#4c8cb4]" />
+                      Hasta
+                    </label>
+                    <input
+                      id="date-to"
+                      type="date"
+                      value={fechaHasta}
+                      onChange={(e) => setFechaHasta(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4c8cb4] focus:border-transparent"
+                    />
+                  </div>
+                </div>
+              )}
               <div className="flex gap-2">
                 <button
                   onClick={handleSearch}
-                  className="bg-[#7eb53c] hover:bg-[#7eb53c]/90 text-white py-3 px-6 rounded-md font-medium transition-colors flex items-center gap-2 disabled:opacity-50"
+                  className={`${
+                    searchMode === "single"
+                      ? "bg-[#7eb53c] hover:bg-[#7eb53c]/90"
+                      : "bg-[#4c8cb4] hover:bg-[#4c8cb4]/90"
+                  } text-white py-3 px-6 rounded-md font-medium transition-colors flex items-center gap-2 disabled:opacity-50`}
                   disabled={isLoading}
                 >
                   <Search className="h-5 w-5" />
@@ -131,13 +249,7 @@ const DataView = () => {
               <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center space-x-2">
                   <Database className="h-5 w-5 text-[#7eb53c]" />
-                  <span className="font-medium">
-                    {isLoading
-                      ? "Cargando datos..."
-                      : searchPerformed
-                        ? `Resultados para ${fecha}: ${filteredData.length}`
-                        : `Total de registros: ${filteredData.length}`}
-                  </span>
+                  <span className="font-medium">{getResultsMessage()}</span>
                 </div>
               </div>
 
@@ -188,8 +300,14 @@ const DataView = () => {
                       ) : (
                         currentItems.map((dato, index) => (
                           <tr key={index} className="hover:bg-gray-50">
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(dato.fecha).toLocaleDateString('es-EC', {day: '2-digit',month: '2-digit',year: 'numeric'})}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{dato.ph}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                              {new Date(dato.fecha).toLocaleDateString("es-EC", {
+                                day: "2-digit",
+                                month: "2-digit",
+                                year: "numeric",
+                              })}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{dato.ph != null ? dato.ph.toFixed(2) : 'N/A'}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{dato.turbidez}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{dato.conductividad}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{dato.tds}</td>
@@ -284,6 +402,7 @@ const DataView = () => {
                   {filteredData.length} registros
                 </div>
               )}
+
               {/* Leyenda del ICA */}
               {filteredData.length > 0 && (
                 <div className="mt-8 bg-gray-50 p-4 rounded-lg border">
