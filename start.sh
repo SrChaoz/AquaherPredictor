@@ -11,6 +11,7 @@ echo "=============================================="
 echo "Iniciando el backend..."
 cd backend
 nohup npm start &  # Iniciar el backend en segundo plano
+cd ..
 
 echo "=============================================="
 echo "Iniciando el frontend..."
