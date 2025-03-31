@@ -53,8 +53,30 @@ const obtenerDatosPredic = async (req, res) => {
   }
 };
 
+// Obtener datos predichos por rango de fechas
+const obtenerDatosPredicPorRango = async (req, res) => {
+  try {
+    const { desde, hasta } = req.query;
+
+    if (!desde || !hasta) {
+      return res.status(400).json({ error: "Se requieren ambas fechas: desde y hasta." });
+    }
+
+    const result = await pool.query(
+      `SELECT * FROM datos_predic WHERE fecha BETWEEN $1 AND $2 ORDER BY fecha DESC`,
+      [desde, hasta]
+    );
+
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error al obtener datos por rango:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
 // Exportar funciones usando CommonJS
 module.exports = {
   guardarDatosPredic,
-  obtenerDatosPredic
+  obtenerDatosPredic,
+  obtenerDatosPredicPorRango
 };

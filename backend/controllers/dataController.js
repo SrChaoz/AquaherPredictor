@@ -4,11 +4,16 @@ const pool = require('../config/dbConfig'); // Archivo de conexión a la base de
 
 // Ruta para obtener todos los datos o por fecha
 router.get('/api/data', async (req, res) => {
-    const { fecha } = req.query;
+    const { fecha, desde, hasta } = req.query;
 
     try {
         let result;
-        if (fecha) {
+        if (desde && hasta) {
+            result = await pool.query(
+                'SELECT * FROM calidad_agua WHERE fecha BETWEEN $1 AND $2 ORDER BY fecha DESC',
+                [desde, hasta]
+            );
+        } else if (fecha) {
             result = await pool.query('SELECT * FROM obtener_datos_por_fecha($1)', [fecha]);
         } else {
             result = await pool.query('SELECT * FROM calidad_agua ORDER BY fecha DESC');
