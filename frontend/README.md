@@ -13,8 +13,11 @@ npm install
 ```
 
 ## Configuración
-
-1. Para ejecutar el frontend:
+1. Crear un .env en la carpeta frontend con el siguinete contenido:
+```bash
+VITE_API_URL=http://localhost:3000
+```
+2. Para ejecutar el frontend:
 ```bash
 npm run dev
 ```
