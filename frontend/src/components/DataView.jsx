@@ -308,14 +308,14 @@ const DataView = () => {
                               })}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{dato.ph != null ? dato.ph.toFixed(2) : 'N/A'}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{dato.turbidez}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{dato.conductividad}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{dato.tds}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{dato.dureza}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{dato.color}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{dato.turbidez ?? 'N/A'}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{dato.conductividad ?? 'N/A'}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{dato.tds ?? 'N/A'}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{dato.dureza ?? 'N/A' }</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{dato.color ?? 'N/A'}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm">
                               <span className={`${getColorICA(dato.ica)} px-2 py-1 rounded-full text-xs font-medium`}>
-                                {dato.ica.toFixed(2)}
+                                {dato.ica != null ? dato.ica.toFixed(2) : 'N/A'}
                               </span>
                             </td>
                           </tr>
