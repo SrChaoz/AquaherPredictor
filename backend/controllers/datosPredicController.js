@@ -30,8 +30,7 @@ const guardarDatosPredic = async (req, res) => {
 // Obtener datos con paginación y búsqueda por fecha
 const obtenerDatosPredic = async (req, res) => {
   try {
-    const { page = 1, limit = 10, fecha } = req.query;
-    const offset = (page - 1) * limit;
+    const { fecha } = req.query;
 
     let query = 'SELECT * FROM datos_predic';
     const params = [];
@@ -41,9 +40,7 @@ const obtenerDatosPredic = async (req, res) => {
       params.push(fecha);
     }
 
-    query += ' ORDER BY fecha DESC LIMIT $' + (params.length + 1) + ' OFFSET $' + (params.length + 2);
-    params.push(limit);
-    params.push(offset);
+    query += ' ORDER BY fecha DESC';
 
     const result = await pool.query(query, params);
     res.json(result.rows);
@@ -52,6 +49,7 @@ const obtenerDatosPredic = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
+
 
 // Obtener datos predichos por rango de fechas
 const obtenerDatosPredicPorRango = async (req, res) => {

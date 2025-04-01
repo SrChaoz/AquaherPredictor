@@ -10,7 +10,14 @@ const app = express();
 const PORT = 3000;
 
 //Midelwares
-app.use(cors());
+app.use(cors({
+    origin: [
+        'http://localhost:3001', 
+        'https://8feb-45-230-242-58.ngrok-free.app',
+        'http://localhost:5173'
+    ]
+  }));
+  
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
