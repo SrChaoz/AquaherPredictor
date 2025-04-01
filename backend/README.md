@@ -14,7 +14,7 @@ npm install
 ## Configuración
 1. Crear un archivo `.env` en la carpeta `backend` con el siguiente contenido:
 ```
-PORT=3000
+DB_PORT=5432
 DB_HOST=localhost
 DB_USER=usuario
 DB_PASSWORD=contraseña
