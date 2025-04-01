@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:3000/api/datos-predic';
+const API_BASE_LOCAL = 'http://localhost:3000/api/datos-predic';
+const API_BASE = `${import.meta.env.VITE_API_URL}/api/datos-predic`;
+
 
 export const fetchAllData = async () => {
   try {

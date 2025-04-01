@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Menu, X } from "lucide-react"
 import LogoAquaher from "../assets/icons/IconAquaher.png" // Importar el logo de AquaHer
 
@@ -9,6 +9,7 @@ import PropTypes from "prop-types"
 
 const Navbar = ({ activeTab }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const navigate = useNavigate()
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
@@ -16,6 +17,12 @@ const Navbar = ({ activeTab }) => {
 
   const closeMenu = () => {
     setIsMenuOpen(false)
+  }
+
+  // Función para manejar la navegación
+  const handleNavigation = (path) => {
+    closeMenu()
+    navigate(path)
   }
 
   const navItems = [
@@ -69,7 +76,7 @@ const Navbar = ({ activeTab }) => {
 
       {/* Menú móvil desplegable */}
       <div
-        className={`md:hidden absolute w-full bg-white shadow-md transition-all duration-300 ease-in-out ${
+        className={`md:hidden absolute w-full bg-white shadow-md transition-all duration-300 ease-in-out z-50 ${
           isMenuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0 overflow-hidden"
         }`}
       >
@@ -77,15 +84,14 @@ const Navbar = ({ activeTab }) => {
           <ul className="space-y-2 pb-3">
             {navItems.map((item) => (
               <li key={item.value}>
-                <Link
-                  to={item.to}
-                  onClick={closeMenu}
-                  className={`block px-4 py-3 rounded-md text-sm font-medium transition-colors ${
+                <button
+                  onClick={() => handleNavigation(item.to)}
+                  className={`w-full text-left block px-4 py-3 rounded-md text-sm font-medium transition-colors ${
                     activeTab === item.value ? `${item.color} text-white` : "text-gray-700 hover:bg-gray-100"
                   }`}
                 >
                   {item.label}
-                </Link>
+                </button>
               </li>
             ))}
           </ul>

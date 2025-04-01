@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 // URL base para la subida de archivos
-const BASE_URL = 'http://localhost:3000/api/upload';
+const BASE_URL_LOCAL = 'http://localhost:3000/api/upload';
+const BASE_URL = `${import.meta.env.VITE_API_URL}/api/upload`;
 
 export const uploadFile = async (archivo, setIsLoading) => {
     const formData = new FormData();
