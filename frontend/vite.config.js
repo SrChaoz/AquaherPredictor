@@ -3,9 +3,12 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
+  build: {
+    outDir: 'build', // Cambia el directorio de salida a "build"
+  },
   server: {
     port: 3001,
-    allowedHosts: ['.ngrok-free.app']  //  dominio de aplicación
+    allowedHosts: ['.ngrok-free.app','all']  //  dominio de aplicación
   },
   resolve: {
     alias: {

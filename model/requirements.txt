@@ -1,10 +1,9 @@
 flask
 pandas
 numpy
-psycopg2
+psycopg2-binary
 scikit-learn
 xgboost
 python-dotenv
-python3.13-devel
 shap
 seaborn

@@ -1,8 +1,11 @@
 const axios = require('axios');
+require('dotenv').config();
+
+const MODEL_URL = process.env.MODEL_URL || 'http://localhost:5000/predict';
 
 exports.predict = async (data) => {
     try {
-        const response = await axios.post('http://localhost:5000/predict', data);
+        const response = await axios.post(MODEL_URL, data);
 
         const prediction = response.data;
 
